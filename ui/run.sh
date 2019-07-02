@@ -1,3 +1,6 @@
 #!/bin/bash
-yarn add serve
+
+cd `dirname $0`
+
+yarn
 ./node_modules/.bin/serve
