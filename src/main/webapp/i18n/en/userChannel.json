@@ -1,0 +1,24 @@
+
+{
+    "chatApp": {
+        "userChannel" : {
+            "home": {
+                "title": "User Channels",
+                "createLabel": "Create a new User Channel",
+                "createOrEditLabel": "Create or edit a User Channel"
+            },
+            "created": "A new User Channel is created with identifier {{ param }}",
+            "updated": "A User Channel is updated with identifier {{ param }}",
+            "deleted": "A User Channel is deleted with identifier {{ param }}",
+            "delete": {
+                "question": "Are you sure you want to delete User Channel {{ id }}?"
+            },
+            "detail": {
+                "title": "User Channel"
+            },
+            "user": "User",
+            "channel": "Channel",
+            "lastRead": "Last Read"
+        }
+    }
+}

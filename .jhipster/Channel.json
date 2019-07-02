@@ -1,0 +1,21 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "minlength"
+            ],
+            "fieldValidateRulesMinlength": "1"
+        }
+    ],
+    "changelogDate": "20181219162444",
+    "dto": "mapstruct",
+    "service": "serviceClass",
+    "entityTableName": "channel",
+    "jpaMetamodelFiltering": false,
+    "pagination": "no"
+}

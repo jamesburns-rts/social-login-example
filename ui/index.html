@@ -1,0 +1,118 @@
+<html>
+<script>
+
+window.onload = () => {
+    function getCookie(name) {
+        let v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+        return v ? v[2] : null;
+    }
+
+    function restCall(method, route, body, onSuccess) {
+        var call = new XMLHttpRequest();
+        call.onload = function () {
+            if (call.status >= 200 && call.status < 300) {
+                onSuccess(JSON.parse(call.response));
+            } else {
+                console.log(method + ' call to ' + route + ' failed');
+            }
+        };
+        call.open(method, 'http://localhost:8080' + route);
+        call.setRequestHeader('Authorization', 'Bearer ' + token);
+        call.setRequestHeader('Content-Type', 'application/json');
+        call.setRequestHeader('Accept', 'application/json');
+        if (body) {
+            call.send(JSON.stringify(body));
+        } else {
+            call.send();
+        }
+    }
+    function GET(route, onSuccess) {
+        restCall('GET', route, null, onSuccess);
+    }
+    function POST(route, body, onSuccess) {
+        restCall('POST', route, body, onSuccess);
+    }
+
+
+    let token = getCookie('social-authentication');
+    if (token) {
+        let loginButton = document.getElementById("login-button");
+        loginButton.parentNode.appendChild(document.createTextNode("Have token: " + token));
+        loginButton.parentNode.removeChild(loginButton);
+
+        document.getElementById("add-channel-container").style.display = "block";
+
+        function loadChannel(id) {
+            GET(`/api/channels/${id}/messages`, (body) => {
+                let contentContainer = document.getElementById("channel-content");
+
+                // remove old ones
+                while (contentContainer.firstChild) {
+                    contentContainer.removeChild(contentContainer.firstChild);
+                }
+
+                body.content.forEach(message => {
+                    let messageDisplay = document.createElement("div");
+                    messageDisplay.appendChild(document.createTextNode(`${message.userLogin}: ${message.content}`));
+                    contentContainer.appendChild(messageDisplay);
+                });
+
+                let messageInput = document.createElement("input");
+                messageInput.id = "message-input";
+                contentContainer.appendChild(messageInput);
+
+                let sendButton = document.createElement("button");
+                sendButton.appendChild(document.createTextNode("Send"));
+                sendButton.onclick = () => {
+                    POST('/api/messages', { channelId: id, content: messageInput.value}, () => loadChannel(id));
+                };
+                contentContainer.appendChild(sendButton);
+            });
+        }
+
+        function refreshChannels() {
+            GET('/api/channels', (body) => {
+
+                let channels = body;
+                let channelsContainer = document.getElementById("channels");
+
+                // remove old ones
+                while (channelsContainer.firstChild) {
+                    channelsContainer.removeChild(channelsContainer.firstChild);
+                }
+
+                channels.forEach(channel => {
+                    let channelDom = document.createElement("li");
+                    channelDom.appendChild(document.createTextNode(channel.name));
+                    channelsContainer.appendChild(channelDom);
+                    channelDom.onclick = () => loadChannel(channel.id);
+                });
+            });
+        }
+        refreshChannels();
+
+        document.getElementById("add-channel-button").onclick = () => {
+            POST('/api/channels', {
+                name: document.getElementById("add-channel-name").value
+            }, () => refreshChannels());
+        }
+    }
+}
+
+</script>
+<body>
+    <form id="login-button" method="POST" action="http://localhost:8080/signin/google">
+        <button type="submit">Sign in with Google</button>
+        <input name="scope" type="hidden" value="https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" />
+    </form>
+    <ul id="channels"></ul>
+    <div id="add-channel-container" style="display: none;">
+        <button id="add-channel-button">Add Channel</button>
+        <input type="text" id="add-channel-name"/>
+    </div>
+
+    <div id="channel-content">
+
+    </div>
+</body>
+</html>

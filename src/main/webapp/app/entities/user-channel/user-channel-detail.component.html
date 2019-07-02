@@ -1,0 +1,38 @@
+
+<div *ngIf="userChannel">
+    <h2><span jhiTranslate="chatApp.userChannel.detail.title">User Channel</span> {{userChannel.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="chatApp.userChannel.user">User</span></dt>
+        <dd>
+            {{userChannel.userLogin}}
+        </dd>
+        <dt><span jhiTranslate="chatApp.userChannel.channel">Channel</span></dt>
+        <dd>
+            <div *ngIf="userChannel.channelId">
+                <a [routerLink]="['/channel', userChannel.channelId]">{{userChannel.channelId}}</a>
+            </div>
+        </dd>
+        <dt><span jhiTranslate="chatApp.userChannel.lastRead">Last Read</span></dt>
+        <dd>
+            <div *ngIf="userChannel.lastReadId">
+                <a [routerLink]="['/message', userChannel.lastReadId]">{{userChannel.lastReadId}}</a>
+            </div>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            (click)="previousState()"
+            class="btn btn-info">
+        <span class="fa fa-arrow-left"></span>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button type="button"
+            [routerLink]="['/', { outlets: { popup: 'user-channel/'+ userChannel.id + '/edit'} }]"
+            replaceUrl="true"
+            queryParamsHandling="merge"
+            class="btn btn-primary">
+        <span class="fa fa-pencil"></span>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+</div>

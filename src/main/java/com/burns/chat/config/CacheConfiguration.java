@@ -43,6 +43,9 @@ public class CacheConfiguration {
             cm.createCache(com.burns.chat.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.burns.chat.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             cm.createCache(com.burns.chat.domain.SocialUserConnection.class.getName(), jcacheConfiguration);
+            cm.createCache(com.burns.chat.domain.Message.class.getName(), jcacheConfiguration);
+            cm.createCache(com.burns.chat.domain.Channel.class.getName(), jcacheConfiguration);
+            cm.createCache(com.burns.chat.domain.UserChannel.class.getName(), jcacheConfiguration);
             // jhipster-needle-ehcache-add-entry
         };
     }

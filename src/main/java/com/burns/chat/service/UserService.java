@@ -270,4 +270,9 @@ public class UserService {
         return authorityRepository.findAll().stream().map(Authority::getName).collect(Collectors.toList());
     }
 
+    public Optional<User> getCurrentUser() {
+        Optional<String> login = SecurityUtils.getCurrentUserLogin();
+        return login.isPresent() ? userRepository.findOneByLogin(login.get()) : Optional.empty();
+    }
+
 }
